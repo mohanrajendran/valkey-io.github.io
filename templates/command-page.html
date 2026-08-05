@@ -61,12 +61,15 @@
     <dl>
         <dt>Usage:</dt>
         <dd>
-            <code>
-            {% if command_data_obj.container %}{{ command_data_obj.container }}{% endif %} {{command_obj_name}}
-            {% if command_data_obj.arguments %}
-            {{ commands::arguments_parse(argument_array=command_data_obj.arguments) }}
-            {% endif %}
-            </code>
+            <pre><code>
+{%- if command_data_obj.container %}{{ command_data_obj.container }} {% endif -%}
+{{command_obj_name}}
+{%- if command_data_obj.arguments -%}
+{%- for argument in command_data_obj.arguments %}
+  {{ commands::argument_render(argument=argument) }}
+{%- endfor -%}
+{%- endif %}
+</code></pre>
         </dd>
     </dl>
     {% if command_data_obj.complexity %}

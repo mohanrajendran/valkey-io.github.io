@@ -1,3 +1,69 @@
+{%- macro argument_render(argument) -%}
+{%- if argument.optional and argument.optional == true -%}
+{%- set start = "[" -%}
+{%- set end = "]" -%}
+{%- elif argument.type and argument.type == "oneof" -%}
+{%- set start = "" -%}
+{%- set end = "" -%}
+{%- else -%}
+{%- set start = "" -%}
+{%- set end = "" -%}
+{%- endif -%}
+{%- set token = "" -%}
+{%- if argument.type and argument.token -%}
+{%- set token = argument.token -%}
+{%- endif -%}
+{%- set name = "" -%}
+{%- if argument.type and argument.type != "block" and argument.type != "oneof" and argument.type != "pure-token" -%}
+{%- set name = argument.name -%}
+{%- endif -%}
+{%- set next = "" -%}
+{%- if argument.type and argument.type == "oneof" -%}
+{%- if argument.arguments -%}
+{%- set next = self::arguments_inline(argument_array=argument.arguments, separator=" | ") -%}
+{%- endif -%}
+{%- else -%}
+{%- if argument.arguments -%}
+{%- set next = self::arguments_inline(argument_array=argument.arguments, separator=" ") -%}
+{%- endif -%}
+{%- endif -%}
+{{ start }}{{ token }}{% if token and name %} {% endif %}{{ name }}{% if (token or name) and next %} {% endif %}{{ next }}{{ end }}
+{%- if argument.multiple %} [{{ token }}{% if token and name %} {% endif %}{{ name }}{% if (token or name) and next %} {% endif %}{{ next }} ...]{% endif -%}
+{%- endmacro argument_render -%}
+
+{%- macro arguments_inline(argument_array, separator=" ") -%}
+{%- for argument in argument_array -%}
+{%- if argument.optional and argument.optional == true -%}
+{%- set start = "[" -%}
+{%- set end = "]" -%}
+{%- else -%}
+{%- set start = "" -%}
+{%- set end = "" -%}
+{%- endif -%}
+{%- set token = "" -%}
+{%- if argument.type and argument.token -%}
+{%- set token = argument.token -%}
+{%- endif -%}
+{%- set name = "" -%}
+{%- if argument.type and argument.type != "block" and argument.type != "oneof" and argument.type != "pure-token" -%}
+{%- set name = argument.name -%}
+{%- endif -%}
+{%- set next = "" -%}
+{%- if argument.type and argument.type == "oneof" -%}
+{%- if argument.arguments -%}
+{%- set next = self::arguments_inline(argument_array=argument.arguments, separator=" | ") -%}
+{%- endif -%}
+{%- else -%}
+{%- if argument.arguments -%}
+{%- set next = self::arguments_inline(argument_array=argument.arguments, separator=" ") -%}
+{%- endif -%}
+{%- endif -%}
+{{ start }}{{ token }}{% if token and name %} {% endif %}{{ name }}{% if (token or name) and next %} {% endif %}{{ next }}{{ end }}
+{%- if argument.multiple %} [{{ token }}{% if token and name %} {% endif %}{{ name }}{% if (token or name) and next %} {% endif %}{{ next }} ...]{% endif -%}
+{%- if not loop.last %}{{ separator }}{% endif -%}
+{%- endfor -%}
+{%- endmacro arguments_inline -%}
+
 {%- macro arguments_parse(argument_array, separator="") -%}
     {%- for arguments in argument_array -%}
         {%- if arguments.optional and arguments.optional ==  true -%}
