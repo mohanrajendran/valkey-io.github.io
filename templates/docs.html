@@ -3,12 +3,17 @@
 {% import "macros/docs.html" as docs %}
 
 {% block subhead_content %}
-<div class="styled-title">
-    <h1>Documentation by Topic</h1>
+<div class="docs-title-band">
+    <div class="docs-title-inner">
+        <p class="docs-eyebrow">Valkey documentation</p>
+        <h1>Documentation by topic</h1>
+        <p class="docs-title-summary">Find a guide, concept, or reference page for building and operating Valkey.</p>
+    </div>
 </div>
 {% endblock subhead_content %}
 
 {% block main_content %}
+<article class="docs-article docs-landing" id="docs-article">
 
 {% set list = [] %}
 {% if section.pages | length == 0 %}
@@ -20,12 +25,16 @@
 {% set page_contents = docs::extract_markdown(content= docs_file_contents) %}
 {%- set content_with_fixed_links = docs::fix_links(content= page_contents) -%}
 
-
 {{ content_with_fixed_links  | markdown | safe }}
+</article>
 {% endblock main_content %}
 
 {% block related_content %}
-<h2>Alphabetical Index</h2>
+{{ docs::navigation() }}
+
+<details class="docs-topic-index" open>
+    <summary>All topics</summary>
+    <ul class="topic-list">
 {% for page in section.pages %}
     {% set docs_file_contents = docs::load(slug= page.slug) %}
     {% set frontmatter = docs::extract_frontmatter(content= docs_file_contents) %}
@@ -33,26 +42,16 @@
 
     {% if frontmatter_length > 0 %}
         {% set frontmatter_data = load_data(literal= frontmatter, format="yaml") %}
-        {% set description = frontmatter_data.description | escape | safe %}
-        {% set description_no_line_breaks = description | regex_replace(pattern=`[\u0000-\u001F]`, rep=` `) %}
-
-        {% set_global list = list | concat(with= ['{ "title" : "' ~ frontmatter_data.title ~ '", "path" : "' ~ page.path ~ '", "description" : "' ~ description_no_line_breaks ~ '" }']) %}
+        {% if frontmatter_data.title %}
+        <li class="topic-list-item">
+            <a href="{{ page.path }}">
+                {{ frontmatter_data.title }}
+                {% if frontmatter_data.description %}<span class="topic-description">{{ frontmatter_data.description | safe }}</span>{% endif %}
+            </a>
+        </li>
+        {% endif %}
     {% endif %}
-   
-
 {% endfor %}
-    {% set joined_list =  list | join(sep=",") %}
-    {% set topic_list = load_data(literal= "[" ~ joined_list ~ "]", format="json") | sort(attribute="title") %} 
-    
-    <ul class="topic-list">
-        {% for topic in topic_list %}
-            <li>
-                <a href="{{ topic.path }}">
-                    {{ topic.title }}
-                    <span class="topic-description">{{ topic.description | safe }}</span>
-                </a>
-            </li>
-        {% endfor %}
     </ul>
-
+</details>
 {% endblock related_content %}

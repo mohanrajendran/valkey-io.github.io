@@ -79,3 +79,53 @@
         {{ language | title }}
     {% endif %}
 {% endmacro %}
+
+
+{%- macro navigation() -%}
+<nav class="docs-navigation" aria-label="Documentation">
+    <a class="docs-navigation-title" href="/topics/">Documentation</a>
+
+    <section class="docs-navigation-group">
+        <h2>Get started</h2>
+        <ul>
+            <li><a href="/topics/introduction/">Introduction</a></li>
+            <li><a href="/topics/quickstart/">Quick start</a></li>
+            <li><a href="/topics/installation/">Installation</a></li>
+        </ul>
+    </section>
+
+    <section class="docs-navigation-group">
+        <h2>Build applications</h2>
+        <ul>
+            <li><a href="/topics/data-types/">Data types</a></li>
+            <li><a href="/topics/pipelining/">Pipelining</a></li>
+            <li><a href="/topics/transactions/">Transactions</a></li>
+            <li><a href="/topics/indexing/">Secondary indexes</a></li>
+            <li><a href="/topics/client-side-caching/">Client-side caching</a></li>
+        </ul>
+    </section>
+
+    <section class="docs-navigation-group">
+        <h2>Operate Valkey</h2>
+        <ul>
+            <li><a href="/topics/valkey.conf/">Configuration</a></li>
+            <li><a href="/topics/persistence/">Persistence</a></li>
+            <li><a href="/topics/replication/">Replication</a></li>
+            <li><a href="/topics/sentinel/">Sentinel</a></li>
+            <li><a href="/topics/cluster-tutorial/">Cluster tutorial</a></li>
+            <li><a href="/topics/security/">Security</a></li>
+            <li><a href="/topics/tls/">TLS</a></li>
+        </ul>
+    </section>
+
+    <section class="docs-navigation-group">
+        <h2>Reference</h2>
+        <ul>
+            <li><a href="/commands/">Command reference</a></li>
+            <li><a href="/clients/">Client libraries</a></li>
+            <li><a href="/topics/cli/">valkey-cli</a></li>
+            <li><a href="/topics/modules-intro/">Valkey modules</a></li>
+        </ul>
+    </section>
+</nav>
+{%- endmacro navigation -%}

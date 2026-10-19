@@ -21,8 +21,12 @@
 
 {% block subhead_content %}
 {% if has_frontmatter and frontmatter_title %}
-    <div class="styled-title">
-        <h1 class="page-title">Documentation: {{ frontmatter_title }}</h1>
+    <div class="docs-title-band">
+        <div class="docs-title-inner">
+            <p class="docs-eyebrow">Valkey documentation</p>
+            <h1>{{ frontmatter_title }}</h1>
+            <p class="docs-title-summary">Use the navigation to find a guide, concept, or reference page.</p>
+        </div>
     </div>
 {% endif  %}
 {% endblock subhead_content %}
@@ -43,8 +47,9 @@
 {% endblock breadcrumbs %}
 
 {% block main_content %}
+<article class="docs-article" id="docs-article">
 {% if config.extra.review_list is containing(page.path) %}
-<p><strong>This page is under review.</strong> The page is likely incorrect, contains invalid links, and/or needs technical review. 
+<p class="docs-review-notice"><strong>This page is under review.</strong> The page is likely incorrect, contains invalid links, and/or needs technical review.
     In the future it may change substantially or be removed entirely.</p>
 <hr />
 {% endif %}
@@ -54,25 +59,24 @@
 {% else %}
     {{ content_with_fixed_links | markdown | safe }}
 {% endif %}
+</article>
 {% endblock main_content %}
 
 {% block related_content %}
-<h2 id="topic-list-title">Alphabetical Index</h2>
-<ul id="topic-list"></ul>
+{{ docs::navigation() }}
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    var 
-        topicListEl = document.getElementById('topic-list'),
-        f = fetch("/topics-list/");
+<nav class="docs-on-page" aria-label="On this page">
+    <h2>On this page</h2>
+    <ol id="docs-toc"></ol>
+</nav>
 
-    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
-    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
-});
-</script>
+<details class="docs-topic-index">
+    <summary>All topics</summary>
+    <ul id="topic-list"></ul>
+</details>
 
 <div class="edit_box">
     See an error?
-    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/{{ page.slug }}.md">Update this Page on GitHub!</a>
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/{{ page.slug }}.md">Update this page on GitHub</a>
 </div>
 {% endblock related_content %}
